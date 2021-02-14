@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, TextField } from '@material-ui/core'
-import { useForm } from 'react-hook-form'
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core'
+import { Controller, useForm } from 'react-hook-form'
 import AddIcon from '@material-ui/icons/AddCircle'
 import PropTypes from 'prop-types'
 
@@ -13,68 +13,103 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '16px',
   },
 
+  amountField: {
+    width: '80px',
+  },
+
+  expensePaper: {
+    margin: '10px',
+    padding: '10px',
+    backgroundColor: '#eee',
+  },
+  title: {
+    fontSize: 14,
+  },
 }))
 
-const emptyExpense = {
-  category: '',
-  comment: '',
-  amount: 0,
-}
-
 function AddExpense(props) {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, control } = useForm()
   const classes = useStyles()
-  const [expense, setExpense] = useState(emptyExpense)
-  const { newExpense } = props
+  const { newExpense, categories } = props
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data))
-    newExpense(data.category, data.amount, new Date())
+    newExpense(data.category, data.description, data.amount, new Date())
   }
 
   return (
-    <>
+    <Paper className={classes.expensePaper}>
+      <Typography className={classes.title} color="textSecondary" gutterBottom>
+        Add new expense
+      </Typography>
       <form
         onSubmit={handleSubmit(onSubmit)}
       >
+        <FormControl>
+          <InputLabel
+            shrink
+          >
+            Category
+          </InputLabel>
+          <Controller
+            control={control}
+            name="category"
+            defaultValue=""
+            as={(
+              <Select
+                className={classes.formField}
+                id="category-select"
+              >
+                {categories && categories.map((category) => (
+                  <MenuItem key={category.name} value={category.name}>
+                    {category.icon}
+                    &nbsp;
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+        </FormControl>
         <TextField
           inputRef={register}
           className={classes.formField}
-          name="category"
-          label="Category"
+          name="description"
+          label="Description"
           InputLabelProps={{
             shrink: true,
           }}
         />
-        <TextField
-          inputRef={register}
-          className={classes.formField}
-          name="comment"
-          label="Comment"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          inputRef={register}
-          className={classes.formField}
-          name="amount"
-          label="Amount"
-          InputLabelProps={{
-            shrink: true,
-            startadornment: <InputAdornment position="start">€</InputAdornment>,
-          }}
-        />
+        <FormControl>
+          <TextField
+            inputRef={register}
+            className={classes.amountField}
+            name="amount"
+            label="Amount"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">€</InputAdornment>,
+            }}
+          />
+        </FormControl>
         <IconButton size="medium" type="submit">
           <AddIcon />
         </IconButton>
       </form>
-    </>
+    </Paper>
   )
 }
 
 AddExpense.propTypes = {
   newExpense: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      icon: PropTypes.string,
+    }),
+  ).isRequired,
 }
 
 export default AddExpense
