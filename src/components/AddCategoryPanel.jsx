@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, Paper, TextField, Typography } from '@material-ui/core'
+import { Button, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, InputLabel, Paper, TextField, Typography } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import AddIcon from '@material-ui/icons/AddCircle'
 import PropTypes from 'prop-types'
@@ -32,7 +32,7 @@ function AddCategoryPanel(props) {
   const { register, handleSubmit } = useForm()
   const classes = useStyles()
   const [category, setCategory] = useState(emptyCategory)
-  const { newCategory } = props
+  const { newCategory, open, handleClose } = props
 
   const onSubmit = (data) => {
     console.log(JSON.stringify(data))
@@ -40,41 +40,53 @@ function AddCategoryPanel(props) {
   }
 
   return (
-    <Paper className={classes.expensePaper}>
-      <Typography className={classes.title} color="textSecondary" gutterBottom>
-        Add new category
-      </Typography>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <TextField
-          inputRef={register}
-          className={classes.formField}
-          name="name"
-          label="Name"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          inputRef={register}
-          className={classes.formField}
-          name="icon"
-          label="Icon"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <IconButton size="medium" type="submit">
-          <AddIcon />
-        </IconButton>
-      </form>
-    </Paper>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          Add new category
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Paper className={classes.expensePaper}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <TextField
+              inputRef={register}
+              className={classes.formField}
+              name="name"
+              label="Name"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              inputRef={register}
+              className={classes.formField}
+              name="icon"
+              label="Icon"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <IconButton size="medium" type="submit">
+              <AddIcon />
+            </IconButton>
+          </form>
+        </Paper>
+      </DialogContent>
+    </Dialog>
   )
+}
+
+AddCategoryPanel.defaultProps = {
+  open: false,
 }
 
 AddCategoryPanel.propTypes = {
   newCategory: PropTypes.func.isRequired,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func.isRequired,
 }
 
 export default AddCategoryPanel

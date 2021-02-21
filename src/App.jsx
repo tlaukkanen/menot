@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import {
-  AppBar, Box, Tab, Tabs,
+  AppBar, Box, Button, Fab, Grid, Paper, Tab, Tabs,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import AddIcon from '@material-ui/icons/Add'
 import store from 'store'
 import AddExpense from './components/AddExpense'
-import ExpensesList from './components/ExpensesList'
+import ExpensesPanel from './components/ExpensesPanel'
 import ConfigPanel from './components/ConfigPanel'
 import AddCategoryPanel from './components/AddCategoryPanel'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 
   tab: {
     width: '100px',
+  },
+
+  fab: {
+    position: 'sticky',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+
+  paper: {
+    padding: theme.spacing(2),
   },
 
 }))
@@ -23,6 +34,9 @@ function App() {
   const [value, setValue] = useState(0)
   const [expenses, setExpenses] = useState([])
   const [categories, setCategories] = useState([])
+  const [showExpenseDialog, setShowExpenseDialog] = useState(false)
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false)
+  const [selectedExpense, setSelectedExpense] = useState(null)
 
   useEffect(() => {
     const data = store.get('data')
@@ -33,7 +47,7 @@ function App() {
 
   useEffect(() => {
     const data = store.get('categories')
-    if(data) {
+    if (data) {
       setCategories(data)
     } else {
       setCategories([
@@ -48,9 +62,11 @@ function App() {
     setValue(newValue)
   }
 
-  const newExpense = (category, description, amount, date) => {
-    console.log('Adding new item: ' + category + ' ' + description + ' ' + amount + ' ' + date)
+  const newExpense = (id, category, description, amount, date) => {
+    console.log(`Adding new item: ${id} ${category} ${description} ${amount} ${date}`)
+    setShowExpenseDialog(false)
     const newExpenses = [{
+      id,
       category,
       description,
       amount,
@@ -58,6 +74,17 @@ function App() {
     }, ...expenses]
     setExpenses(newExpenses)
     store.set('data', newExpenses)
+  }
+
+  const clearData = () => {
+    store.set('data', [])
+    setExpenses([])
+  }
+
+  const showExpense = (expenseId) => {
+    const expense = expenses.find((exp) => exp.id === expenseId)
+    setSelectedExpense(expense)
+    setShowExpenseDialog(true)
   }
 
   const newCategory = (name, icon) => {
@@ -70,7 +97,7 @@ function App() {
   }
 
   const removeCategory = (name) => {
-    const newCategories = categories.filter(c => c.name !== name)
+    const newCategories = categories.filter((c) => c.name !== name)
     setCategories(newCategories)
     store.set('categories', newCategories)
   }
@@ -96,22 +123,54 @@ function App() {
       <div hidden={value !== 0}>
         <Box m={2} />
         <AddExpense
+          open={showExpenseDialog}
+          handleCancel={() => setShowExpenseDialog(false)}
           categories={categories}
           newExpense={(category, desc, amount, date) => newExpense(category, desc, amount, date)}
         />
         <Box m={1} />
-        <ExpensesList
+        <ExpensesPanel
           expenses={expenses}
           categories={categories}
+          onRowClick={(event, rowId) => showExpense(rowId)}
         />
+        <Fab
+          aria-label="Add expense"
+          className={classes.fab}
+          onClick={() => setShowExpenseDialog(true)}
+          color="primary"
+        >
+          <AddIcon />
+        </Fab>
       </div>
       <div hidden={value !== 1}>
         Stats
+      </div>
+      <div hidden={value !== 2}>
+        <Grid
+          container
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          className={classes.paper}
+        >
+          <Grid item>
+            <Button
+              onClick={() => clearData()}
+              variant="contained"
+              color="secondary"
+            >
+              CLEAR DATA
+            </Button>
+          </Grid>
+        </Grid>
       </div>
       <div hidden={value !== 3}>
         <Box m={2} />
         <AddCategoryPanel
           newCategory={(name, icon) => newCategory(name, icon)}
+          handleClose={() => setShowCategoryDialog(false)}
+          open={showCategoryDialog}
         />
         <ConfigPanel
           categories={categories}
