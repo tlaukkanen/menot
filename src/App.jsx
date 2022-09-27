@@ -54,6 +54,11 @@ function App() {
         { name: 'Groceries', icon: '🛍' },
         { name: 'Car', icon: '🚗' },
         { name: 'Hobbies', icon: '⚽' },
+        { name: 'Lunch', icon: '🍽️' },
+        { name: 'Housing', icon: '🏠' },
+        { name: 'Well-being', icon: '🏋️‍♂️' },
+        { name: 'Entertainment', icon: '🍿' },
+        { name: 'Extra', icon: '🍬' },
       ])
     }
   }, [setCategories])
