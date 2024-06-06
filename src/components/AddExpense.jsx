@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core'
+import React from 'react'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { v1 as uuid } from 'uuid'
 
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles'
+import { useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled((theme) => ({
 
   expenseDialog: {
     minWidth: '320px',
+    paddingTop: '16px !important',
   },
 
   title: {
@@ -46,6 +48,9 @@ function AddExpense(props) {
         <DialogTitle>Add new expense</DialogTitle>
         <DialogContent
           className={classes.expenseDialog}
+          // This is here to fix this issue:
+          // https://github.com/mui/material-ui/issues/27851
+          sx={{ '.MuiDialogContent-root&.MuiDialogContent-root': { pt: 1 } }}
         >
           <Grid
             container
@@ -70,7 +75,8 @@ function AddExpense(props) {
                 fullWidth
               >
                 <InputLabel
-                  shrink
+                  
+                  id="category-label"
                 >
                   Category
                 </InputLabel>
@@ -81,6 +87,8 @@ function AddExpense(props) {
                   as={(
                     <Select
                       id="category-select"
+                      label="Category"
+                      labelId="category-label"
                     >
                       {categories && categories.map((category) => (
                         <MenuItem key={category.name} value={category.name}>
@@ -114,6 +122,7 @@ function AddExpense(props) {
                   name="amount"
                   label="Amount"
                   type="number"
+                  min="0"
                   InputLabelProps={{
                     shrink: true,
                   }}

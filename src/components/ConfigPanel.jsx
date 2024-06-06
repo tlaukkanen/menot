@@ -1,12 +1,11 @@
-import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import Trashcan from '@material-ui/icons/Delete'
+import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import Trashcan from '@mui/icons-material/Delete'
 import React from 'react'
-import Paper from '@material-ui/core/Paper'
+import Paper from '@mui/material/Paper'
 import PropTypes from 'prop-types'
 
-
-const useStyles = makeStyles(() => ({
+const useStyles = styled(() => ({
 
   iconColumn: {
     width: '32px',
@@ -16,7 +15,6 @@ const useStyles = makeStyles(() => ({
 
 function ConfigPanel(props) {
   const { categories, removeCategory } = props
-  const classes = useStyles()
 
   return (
     <TableContainer component={Paper}>

@@ -1,14 +1,14 @@
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
-} from '@material-ui/core'
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
 import React from 'react'
-import Paper from '@material-ui/core/Paper'
+import Paper from '@mui/material/Paper'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
 import numeral from 'numeral'
 
-const useStyles = makeStyles(() => ({
+const useStyles = styled(() => ({
 
   listIcon: {
     fontSize: 18,
