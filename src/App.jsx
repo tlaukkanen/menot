@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import {
-  AppBar, Box, Button, Fab, Grid, Paper, Tab, Tabs,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import AddIcon from '@material-ui/icons/Add'
+  AppBar, Box, Button, Fab, Grid, Tab, Tabs,
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
+import AddIcon from '@mui/icons-material/Add'
 import store from 'store'
 import AddExpense from './components/AddExpense'
 import ExpensesPanel from './components/ExpensesPanel'
 import ConfigPanel from './components/ConfigPanel'
 import AddCategoryPanel from './components/AddCategoryPanel'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled((theme) => ({
 
   tab: {
     width: '100px',
@@ -118,6 +118,8 @@ function App() {
           onChange={handleChange}
           aria-label="App sections"
           centered
+          textColor="white"
+          indicatorColor="secondary"
         >
           <Tab className={classes.tab} label="Expenses" />
           <Tab className={classes.tab} label="Stats" />

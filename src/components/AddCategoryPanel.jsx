@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import { Button, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, InputLabel, Paper, TextField, Typography } from '@material-ui/core'
+import { Dialog, DialogContent, DialogTitle, IconButton, Paper, TextField, Typography, styled } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import AddIcon from '@material-ui/icons/AddCircle'
+import AddIcon from '@mui/icons-material/Add'
 import PropTypes from 'prop-types'
 
-import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled((theme) => ({
 
   formField: {
     width: '100px',
